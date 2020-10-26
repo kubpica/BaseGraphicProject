@@ -24,8 +24,8 @@ void SimpleShapeApplication::init() {
     }
 
     std::vector<GLfloat> vertices = {
-            -0.5f, 0.0f, 0.0f,
-            2.0f, 0.0f, 0.0f,
+            -0.5f, 0.0f, 4.0f,
+            0.5f, 0.0f, -4.0f,
             0.0f, 0.5f, 0.0f
     };
 
