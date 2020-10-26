@@ -24,9 +24,19 @@ void SimpleShapeApplication::init() {
     }
 
     std::vector<GLfloat> vertices = {
-            -0.5f, 0.0f, 4.0f,
-            0.5f, 0.0f, -4.0f,
-            0.0f, 0.5f, 0.0f
+            // Dach - trójk¹t
+            -0.8f, 0.2f, 0.0f,
+            0.8f, 0.2f, 0.0f,
+            0.0f, 0.6f, 0.0f,
+            // Blok - kwadrat z dwóch trójk¹tów
+            // Lewy trójk¹t
+            -0.4f, -0.6f, 0.0f,
+            0.4f, -0.6f, 0.0f,
+            -0.4f, 0.2f, 0.0f,
+            // Prawy trójk¹t
+            -0.4f, 0.2f, 0.0f,
+            0.4f, -0.6f, 0.0f,
+            0.4f, 0.2f, 0.0f,
     };
 
     GLuint v_buffer_handle;
@@ -56,6 +66,6 @@ void SimpleShapeApplication::init() {
 
 void SimpleShapeApplication::frame() {
     glBindVertexArray(vao_);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 9);
     glBindVertexArray(0);
 }
