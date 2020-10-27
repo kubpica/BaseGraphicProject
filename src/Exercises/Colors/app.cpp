@@ -30,13 +30,13 @@ void SimpleShapeApplication::init() {
             0.0f, 0.6f, 0.0f, 1.0f, 0.0f, 0.0f,
             // Blok - kwadrat z dwóch trójk¹tów
             // Lewy trójk¹t
-            -0.4f, -0.6f, 0.0f, 1.0f, 0.0f, 0.0f,
-            0.4f, -0.6f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.4f, 0.2f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -0.4f, -0.6f, 0.0f, 1.0f, 1.0f, 0.0f,
+            0.4f, -0.6f, 0.0f, 1.0f, 1.0f, 0.0f,
+            -0.4f, 0.2f, 0.0f, 1.0f, 1.0f, 0.0f,
             // Prawy trójk¹t
-            -0.4f, 0.2f, 0.0f, 1.0f, 0.0f, 0.0f,
-            0.4f, -0.6f, 0.0f, 1.0f, 0.0f, 0.0f,
-            0.4f, 0.2f, 0.0f, 1.0f, 0.0f, 0.0f
+            -0.4f, 0.2f, 0.0f, 1.0f, 1.0f, 0.0f,
+            0.4f, -0.6f, 0.0f, 1.0f, 1.0f, 0.0f,
+            0.4f, 0.2f, 0.0f, 1.0f, 1.0f, 0.0f
     };
 
     GLuint v_buffer_handle;
@@ -49,9 +49,16 @@ void SimpleShapeApplication::init() {
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, v_buffer_handle);
-    glEnableVertexAttribArray(0);
-    // Define an array of generic vertex attribute data (index, size, type, normalized, stride, pointer)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<GLvoid *>(0));
+
+        // Pod³¹czenie pozycji wierzcho³ków
+        glEnableVertexAttribArray(0);
+        // Define an array of generic vertex attribute data (index, size, type, normalized, stride, pointer)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<GLvoid *>(0));
+
+        // Pod³¹czenie kolorów wierzcho³ków
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
