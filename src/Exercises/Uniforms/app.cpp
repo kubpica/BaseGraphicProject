@@ -63,6 +63,7 @@ void SimpleShapeApplication::init() {
 
         glBindBuffer(GL_ARRAY_BUFFER, v_buffer_handle);
 
+#pragma region Zadanie 4 - Uniform interface block
             // Podpinamy blok Modifiers z shadera fragmentów pod punkt bindowania `0`
             auto u_modifiers_index = glGetUniformBlockIndex(program, "Modifiers");
             if (u_modifiers_index == GL_INVALID_INDEX)
@@ -82,12 +83,17 @@ void SimpleShapeApplication::init() {
             glBindBuffer(GL_UNIFORM_BUFFER, ubo_handle);
             glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
 
-            //TODO Przesy³amy do niego dane korzystaj¹c z poleceñ
+            // Przesy³amy do niego dane korzystaj¹c z poleceñ glBufferSubData
+            float strength = 0.5;
+            float light[3] = { 0.7, 0.2, 0.3 };
             // Updates a subset of a buffer object's data store
             // void glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
+            glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), light);
 
             // Teraz mo¿emy ju¿ go odbindowaæ
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
+#pragma endregion
 
             // Przed rysowaniem musimy podpi¹æ bufor do zmiennej w szaderze
             glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo_handle);
