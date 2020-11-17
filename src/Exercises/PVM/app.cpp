@@ -10,6 +10,10 @@
 
 
 #include "Application/utils.h"
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/gtc/matrix_transform.hpp>
 
 void SimpleShapeApplication::init() {
 
@@ -76,11 +80,11 @@ void SimpleShapeApplication::init() {
             }
 
             // Nastêpnie tworzymy uniform buffer poleceniem ```glsl
-            GLuint ubo_handle(0u);
-            glGenBuffers(1, &ubo_handle);
+            GLuint u_buffer_handle[2];
+            glGenBuffers(2, u_buffer_handle);
 
-            // Bindujemy go i alokujemy w nim 32 bajty pamiêci:
-            glBindBuffer(GL_UNIFORM_BUFFER, ubo_handle);
+            // Bindujemy go i alokujemy w nim 32 bajty pamiêci
+            glBindBuffer(GL_UNIFORM_BUFFER, u_buffer_handle[0]);
             glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
 
             // Przesy³amy do niego dane korzystaj¹c z poleceñ glBufferSubData
@@ -93,10 +97,52 @@ void SimpleShapeApplication::init() {
 
             // Teraz mo¿emy ju¿ go odbindowaæ
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
-#pragma endregion
 
             // Przed rysowaniem musimy podpi¹æ bufor do zmiennej w szaderze
-            glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo_handle);
+            glBindBufferBase(GL_UNIFORM_BUFFER, 0, u_buffer_handle[0]);
+#pragma endregion
+
+#pragma region Zadanie 5 - PVM
+            // Podpinamy blok Transformations z shadera wierzcho³ków pod punkt bindowania `1`
+            auto u_transformations_index = glGetUniformBlockIndex(program, "Transformations");
+            if (u_transformations_index == GL_INVALID_INDEX) 
+            { 
+                std::cout << "Cannot find Transformations uniform block in program" << std::endl; 
+            }
+            else 
+            { 
+                glUniformBlockBinding(program, u_transformations_index, 1); 
+            }
+
+            // Bindujemy go i alokujemy pamiêæ dla bufora
+            glBindBuffer(GL_UNIFORM_BUFFER, u_buffer_handle[1]);
+            glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
+
+            // Tworzymy macierz PVM bêd¹c¹ iloczynem macierzy P, V i M za pomoc¹ biblioteki glm (OpenGL mathematics).
+            // Macierz modelu M mo¿emy pocz¹tkowo ustawiæ jako macierz jednostkow¹: glm::mat4 M(1.0f);
+            int w, h;
+            std::tie(w, h) = frame_buffer_size();
+            // Tworzymy macierz widoku V
+            auto V = glm::lookAt(glm::vec3{ 1.0, .5, 2.0 }
+                                , glm::vec3{ 0.0f, 0.0f, 0.0f }
+                                , glm::vec3{ 0.0, 0.0, 1.0 });
+            // Macierz projekcji P
+            auto P = glm::perspective(glm::half_pi<float>(), (float)w / h, 0.1f, 100.0f);
+            
+            // Przesy³amy macierz PVM do bufora uniform
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &P[0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &V[0]);
+                // Adres pierwszego elementu macierzy mo¿emy pobraæ pobraæ wyra¿eniem &PVM[0].
+                // Oczywiœcie moglibysmy równie¿ jednoczeœnie zaalokowaæ pamieæ i przes³aæ macierz do bufora poleceniem glBuferSubdata. 
+                // Ale nastêpnych æwiczeniach bêdziemy przesy³ali wiêcej macierzy oraz bêdziemy wielokrotnie przesy³ali macierze w ci¹gu jednej klatki. Dlatego lepiej rodzieliæ te dwa procesy.
+
+
+            // Teraz mo¿emy ju¿ go odbindowaæ
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+            // Przed rysowaniem musimy podpi¹æ bufor do zmiennej w szaderze
+            glBindBufferBase(GL_UNIFORM_BUFFER, 1, u_buffer_handle[1]);
+#pragma endregion
 
             // Pod³¹czenie pozycji wierzcho³ków
             glEnableVertexAttribArray(0);
@@ -112,8 +158,8 @@ void SimpleShapeApplication::init() {
 
 
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
-    int w, h;
-    std::tie(w, h) = frame_buffer_size();
+    /*int w, h;
+    std::tie(w, h) = frame_buffer_size();*/
     glViewport(0, 0, w, h);
 
     glEnable(GL_DEPTH_TEST);
