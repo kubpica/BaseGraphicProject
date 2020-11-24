@@ -27,18 +27,31 @@ void SimpleShapeApplication::init() {
         std::cerr << std::string(PROJECT_DIR) + "/shaders/base_fs.glsl" << " shader files" << std::endl;
     }
 
+    // Piramidka
     std::vector<GLfloat> vertices = {
-            // Dach - trójk¹t
-            -0.8f, 0.2f, 0.0f, 1.0f, 0.0f, 0.0f, // 0
-            0.8f, 0.2f, 0.0f, 1.0f, 0.0f, 0.0f, // 1
-            0.0f, 0.6f, 0.0f, 1.0f, 0.0f, 0.0f, // 2
-            // Blok - kwadrat z dwóch trójk¹tów
+            // Podstawa - kwadrat z dwóch trójk¹tów
             // Lewy trójk¹t
-            -0.4f, -0.6f, 0.0f, 1.0f, 1.0f, 0.0f, // 3
-            0.4f, -0.6f, 0.0f, 1.0f, 1.0f, 0.0f, // 4
-            -0.4f, 0.2f, 0.0f, 1.0f, 1.0f, 0.0f, // 5
+            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // 0
+            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // 1
+            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // 2
             // Prawy trójk¹t
-            0.4f, 0.2f, 0.0f, 1.0f, 1.0f, 0.0f // 6
+            0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // 3
+            // Przednia œcianka
+            -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // 4
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // 5
+            0.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, // 6
+            // Tylna œcianka
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // 7
+            0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // 8
+            0.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, // 9
+            // Lewa œcianka
+            -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // 10
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // 11
+            0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 1.0f, // 12
+            // Prawa œcianka
+            0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 1.0f, // 13
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 1.0f, // 14
+            0.0f, 0.0f, 0.5f, 1.0f, 0.0f, 1.0f // 15
     };
 
     GLuint v_buffer_handle;
@@ -49,10 +62,17 @@ void SimpleShapeApplication::init() {
 
     // Wypisujemy tyle elementów ile mamy wierzcho³ków
     std::vector<GLushort> indices = {
-           0,1,2, // Dach
-           // Blok - kwadrat z dwóch trójk¹tów
-           3,4,5, // Lewy trójk¹t
-           5,4,6 // Prawy trójk¹t 
+           // Podstawa - kwadrat z dwóch trójk¹tów
+           0,1,2, // Lewy trójk¹t
+           2,1,3, // Prawy trójk¹t 
+           // Przednia œcianka
+           4,5,6,
+           // Tylna œcianka
+           7,8,9,
+           // Lewa œcianka
+           10,11,12,
+           // Prawa œcianka
+           13,14,15
     };
     GLuint idx_buffer_handle;
     glGenBuffers(1, &idx_buffer_handle);
@@ -88,8 +108,8 @@ void SimpleShapeApplication::init() {
             glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
 
             // Przesy³amy do niego dane korzystaj¹c z poleceñ glBufferSubData
-            float strength = 0.5;
-            float light[3] = { 0.7, 0.2, 0.3 };
+            float strength = 0.5; // light_intensity
+            float light[3] = { 1.0, 1.0, 1.0 }; // light_color
             // Updates a subset of a buffer object's data store
             // void glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data);
             glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
@@ -162,12 +182,12 @@ void SimpleShapeApplication::init() {
     std::tie(w, h) = frame_buffer_size();*/
     glViewport(0, 0, w, h);
 
-    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST); // W³¹cza algorytm bufora g³êbi
     glUseProgram(program);
 }
 
 void SimpleShapeApplication::frame() {
     glBindVertexArray(vao_);
-    glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_SHORT, nullptr);
     glBindVertexArray(0);
 }
