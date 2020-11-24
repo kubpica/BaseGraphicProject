@@ -61,6 +61,7 @@ void SimpleShapeApplication::init() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // Wypisujemy tyle elementów ile mamy wierzcho³ków
+    // Backface culling: Œcianka ma byc zdefiniowana w ten sposób, ¿e jak na ni¹ patrzymy to wierzcho³ki pobierane s¹ z bufora w kolejnoœci odwrotnej do wskazówek zegara (glFrontFace(GL_CCW);)
     std::vector<GLushort> indices = {
            // Podstawa - kwadrat z dwóch trójk¹tów
            0,1,2, // Lewy trójk¹t
@@ -68,11 +69,11 @@ void SimpleShapeApplication::init() {
            // Przednia œcianka
            4,5,6,
            // Tylna œcianka
-           7,8,9,
+           7,9,8,
            // Lewa œcianka
            10,11,12,
            // Prawa œcianka
-           13,14,15
+           13,15,14
     };
     GLuint idx_buffer_handle;
     glGenBuffers(1, &idx_buffer_handle);
@@ -181,6 +182,13 @@ void SimpleShapeApplication::init() {
     /*int w, h;
     std::tie(w, h) = frame_buffer_size();*/
     glViewport(0, 0, w, h);
+
+#pragma region Backface culling
+    // Wy³¹czenie rysowania œcianek tylnych
+    glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+#pragma endregion
 
     glEnable(GL_DEPTH_TEST); // W³¹cza algorytm bufora g³êbi
     glUseProgram(program);
