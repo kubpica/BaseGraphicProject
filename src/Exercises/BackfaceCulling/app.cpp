@@ -64,8 +64,8 @@ void SimpleShapeApplication::init() {
     // Backface culling: Œcianka ma byc zdefiniowana w ten sposób, ¿e jak na ni¹ patrzymy to wierzcho³ki pobierane s¹ z bufora w kolejnoœci odwrotnej do wskazówek zegara (glFrontFace(GL_CCW);)
     std::vector<GLushort> indices = {
            // Podstawa - kwadrat z dwóch trójk¹tów
-           0,1,2, // Lewy trójk¹t
-           2,1,3, // Prawy trójk¹t 
+           0,2,1, // Lewy trójk¹t
+           2,3,1, // Prawy trójk¹t 
            // Przednia œcianka
            4,5,6,
            // Tylna œcianka
@@ -144,7 +144,7 @@ void SimpleShapeApplication::init() {
             int w, h;
             std::tie(w, h) = frame_buffer_size();
             // Tworzymy macierz widoku V
-            auto V = glm::lookAt(glm::vec3{ 1.0, .5, 2.0 }
+            auto V = glm::lookAt(glm::vec3{ 2.0, .5, -1.0 }
                                 , glm::vec3{ 0.0f, 0.0f, 0.0f }
                                 , glm::vec3{ 0.0, 0.0, 1.0 });
             // Macierz projekcji P
