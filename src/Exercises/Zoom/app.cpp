@@ -16,7 +16,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 void SimpleShapeApplication::init() {
-
+    set_camera(new Camera);
 
     auto program = xe::create_program(std::string(PROJECT_DIR) + "/shaders/base_vs.glsl",
                                       std::string(PROJECT_DIR) + "/shaders/base_fs.glsl");
@@ -149,16 +149,16 @@ void SimpleShapeApplication::init() {
             // Macierz modelu M mo¿emy pocz¹tkowo ustawiæ jako macierz jednostkow¹: glm::mat4 M(1.0f);
             int w, h;
             std::tie(w, h) = frame_buffer_size();
-            aspect_ = (float)w / h;
-            fov_ = glm::pi<float>() / 4.0;
-            near_ = 0.1f;
-            far_ = 100.0f;
+            float aspect = (float)w / h;
+            float fov = glm::pi<float>() / 4.0;
+            float near = 0.1f;
+            float far = 100.0f;
             // Tworzymy macierz widoku V
-            V_ = glm::lookAt(glm::vec3{ 1.0, .5, 2.0 }
+            camera()->look_at(glm::vec3{ 1.0, .5, 2.0 }
                                 , glm::vec3{ 0.0f, 0.0f, 0.0f }
                                 , glm::vec3{ 0.0, 0.0, 1.0 });
             // Macierz projekcji P
-            P_ = glm::perspective(fov_, aspect_, near_, far_);
+            camera()->perspective(fov, aspect, near, far);
 
             // Przed rysowaniem musimy podpi¹æ bufor do zmiennej w szaderze
             glBindBufferBase(GL_UNIFORM_BUFFER, 1, u_pvm_buffer_);
@@ -178,8 +178,6 @@ void SimpleShapeApplication::init() {
 
 
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
-    /*int w, h;
-    std::tie(w, h) = frame_buffer_size();*/
     glViewport(0, 0, w, h);
 
 #pragma region Backface culling
@@ -200,7 +198,7 @@ void SimpleShapeApplication::frame() {
 
     // Poniewa¿ macierz projekcji P_ mo¿e zmieniaæ siê od klatki do klatki 
     // kod obliczaj¹cy i przesy³aj¹cy macierz PVM do szadera poprzez bufor uniform musi byæ w metodzie frame.
-    auto PVM = P_ * V_;
+    auto PVM = camera()->projection() * camera()->view();
     glBindBuffer(GL_UNIFORM_BUFFER, u_pvm_buffer_);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -209,6 +207,6 @@ void SimpleShapeApplication::frame() {
 void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {
     Application::framebuffer_resize_callback(w, h);
     glViewport(0, 0, w, h);
-    aspect_ = (float)w / h;
-    P_ = glm::perspective(fov_, aspect_, near_, far_);
+    auto aspect = (float)w / h;
+    camera()->set_aspect(aspect);
 }
