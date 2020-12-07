@@ -47,6 +47,11 @@ public:
         x = logistic(y);
         // i w kóncu do przedzia³u (0, pi):
         fov_ = x * glm::pi<float>();
+
+
+        /*
+          Implementacja  ...
+        */
     }
 
 private:
