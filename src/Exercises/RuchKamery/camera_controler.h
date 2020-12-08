@@ -1,18 +1,26 @@
-// Za pomoc¹ klasy izolujemy sposób poruszania kamer¹ od samej kamery
-// i jak przyjdzie potrzeba bêdziemy mogli podmieniæ kontroler na inny np. na FPC (First Person Camera).
+// Za pomocÄ… klasy izolujemy sposÃ³b poruszania kamerÄ… od samej kamery
+// i jak przyjdzie potrzeba bÄ™dziemy mogli podmieniÄ‡ kontroler na inny np. na FPC (First Person Camera).
+#include "camera.h"
+
 class CameraControler {
 public:
-    CameraControler() :camera_(nullptr) {}
-    CameraControler(Camera* camera) :camera_(camera) {}
+    CameraControler() :camera_(nullptr) {
+        LMB_pressed_ = false;
+        scale_ = 0.02; // Przelicznik pomiÄ™dzy pikselami a kÄ…tem.
+    }
+    CameraControler(Camera* camera) :camera_(camera) {
+        LMB_pressed_ = false;
+        scale_ = 0.02; // Jego wartoÅ›Ä‡ naleÅ¼y dobraÄ‡ doÅ›wiadczalnie dla danej rozdzielczoÅ›ci ekranu.
+    }
     void set_camera(Camera* camera) { camera_ = camera; }
 
-    // odczytaliœmy ju¿ zmianê po³o¿enia myszy dx i dy dokonujemy obrotu kamery za pomoc¹ metody
+    // odczytaliÅ›my juÅ¼ zmianÄ™ poÅ‚oÅ¼enia myszy dx i dy dokonujemy obrotu kamery za pomocÄ… metody
     void rotate_camera(float dx, float dy) {
         camera_->rotate_around_center(-scale_ * dy, camera_->x());
-        camera_->rotate_around_center(-scale_ * dx, camera_->y());
+        camera_->rotate_around_center(-scale_ * dx, glm::vec3{ 0.0f, 0.0f, 1.0f });
     }
 
-    // obs³uga ruchu myszy
+    // obsÅ‚uga ruchu myszy
     void mouse_moved(float x, float y) {
         if (LMB_pressed_) {
             auto dx = x - x_;
@@ -24,7 +32,7 @@ public:
         }
     };
 
-    // metody obs³ugi zdarzenia naciœniêcia i puszczenia przycisku myszy
+    // metody obsÅ‚ugi zdarzenia naciÅ›niÄ™cia i puszczenia przycisku myszy
     void LMB_pressed(float x, float y) {
         LMB_pressed_ = true;
         x_ = x;
@@ -41,11 +49,9 @@ public:
 
 private:
     Camera* camera_;
-
-    // Przelicznik pomiêdzy pikselami a k¹tem. 
-    // Jego wartoœæ nale¿y dobraæ doœwiadczalnie dla danej rozdzielczoœci ekranu.
-    float scale_ = 1;
-
-    // chcemy, aby obracanie dzia³a³o tylko jak ruszamy mysz¹ trzymaj¹c wciœniety lewy przycisk myszy
+    float scale_;
     bool LMB_pressed_;
-}
+
+    float x_;
+    float y_;
+};

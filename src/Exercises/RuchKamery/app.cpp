@@ -17,6 +17,7 @@
 
 void SimpleShapeApplication::init() {
     set_camera(new Camera);
+    set_controler(new CameraControler(camera()));
 
     auto program = xe::create_program(std::string(PROJECT_DIR) + "/shaders/base_vs.glsl",
                                       std::string(PROJECT_DIR) + "/shaders/base_fs.glsl");
