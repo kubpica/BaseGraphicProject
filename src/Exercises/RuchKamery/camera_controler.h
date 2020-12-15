@@ -2,6 +2,8 @@
 // i jak przyjdzie potrzeba będziemy mogli podmienić kontroler na inny np. na FPC (First Person Camera).
 #include "camera.h"
 
+using namespace glm;
+
 class CameraControler {
 public:
     CameraControler() :camera_(nullptr) {
@@ -17,7 +19,7 @@ public:
     // odczytaliśmy już zmianę położenia myszy dx i dy dokonujemy obrotu kamery za pomocą metody
     void rotate_camera(float dx, float dy) {
         camera_->rotate_around_center(-scale_ * dy, camera_->x());
-        camera_->rotate_around_center(-scale_ * dx, glm::vec3{ 0.0f, 0.0f, 1.0f });
+        camera_->rotate_around_center(-scale_ * dx, vec3{ 0.0f, 0.0f, 1.0f });
     }
 
     // obsługa ruchu myszy

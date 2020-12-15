@@ -14,15 +14,19 @@
 #include "glad/glad.h"
 
 #include <glm/mat4x4.hpp>
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
+#include <glm/vec3.hpp> // vec3
+#include <glm/vec4.hpp> // vec4
 #include <glm/gtc/matrix_transform.hpp>
-#include <Exercises\RuchKamery\camera.h>
-#include <Exercises\RuchKamery\camera_controler.h>
+#include <Exercises/RuchKamery/camera.h>
+#include <Exercises/RuchKamery/camera_controler.h>
 
-class SimpleShapeApplication : public xe::Application {
+using namespace std;
+using namespace xe;
+using namespace glm;
+
+class SimpleShapeApplication : public Application {
 public:
-    SimpleShapeApplication(int width, int height, std::string title, int major = 4, int minor = 1) :
+    SimpleShapeApplication(int width, int height, string title, int major = 4, int minor = 1) :
             Application(width, height, title, major, minor) {}
 
     void init() override;;

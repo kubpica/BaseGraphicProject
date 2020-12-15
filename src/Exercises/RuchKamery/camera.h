@@ -3,19 +3,22 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+using namespace std;
+using namespace glm;
+
 class Camera {
 public:
 
-    void look_at(const glm::vec3& eye, const glm::vec3& center, const glm::vec3& up) {
-        z_ = glm::normalize(eye - center);
-        x_ = glm::normalize(glm::cross(up, z_));
-        y_ = glm::normalize(glm::cross(z_, x_));
+    void look_at(const vec3& eye, const vec3& center, const vec3& up) {
+        z_ = normalize(eye - center);
+        x_ = normalize(cross(up, z_));
+        y_ = normalize(cross(z_, x_));
 
         position_ = eye;
         center_ = center;
     }
 
-    void perspective(float fov, float aspect, float near, float far) {
+    void setPerspective(float fov, float aspect, float near, float far) {
         fov_ = fov;
         aspect_ = aspect;
         near_ = near;
@@ -27,41 +30,41 @@ public:
     }
 
     // Zamiast zwracaæ macierz V_, bêdziemy j¹ generowaæ z nowych zmiennych "na ¿¹danie"
-    glm::mat4 view() const {
-        glm::mat4 V(1.0f);
+    mat4 view() const {
+        mat4 V(1.0f);
         for (int i = 0; i < 3; ++i) {
             V[i][0] = x_[i];
             V[i][1] = y_[i];
             V[i][2] = z_[i];
         }
 
-        auto t = -glm::vec3{
-                glm::dot(x_, position_),
-                glm::dot(y_, position_),
-                glm::dot(z_, position_),
+        auto t = -vec3{
+                dot(x_, position_),
+                dot(y_, position_),
+                dot(z_, position_),
         };
-        V[3] = glm::vec4(t, 1.0f);
+        V[3] = vec4(t, 1.0f);
 
         return V;
 
     }
 
-    glm::mat4 projection() const { return glm::perspective(fov_, aspect_, near_, far_); }
+    mat4 projection() const { return perspective(fov_, aspect_, near_, far_); }
 
     // W celu p³ynnego przechodzenia od jednego kónca zakresu do drugiego wykorzystamy funkcjê logistyczn¹
     float logistic(float y) {
-        return 1.0f / (1.0f + std::exp(-y));
+        return 1.0f / (1.0f + exp(-y));
     }
 
     // i jej odwrotnoœæ:
     float inverse_logistics(float x) {
-        return std::log(x / (1.0f - x));
+        return log(x / (1.0f - x));
     }
 
     // Niech y_offset bêdzie wartoœci¹ otrzyman¹ poprzez obrót kó³kiem myszy.
     void zoom(float y_offset) {
         // Najpierw obliczamy
-        auto x = fov_ / glm::pi<float>();
+        auto x = fov_ / pi<float>();
         // jest to liczba z zakresu [0,1], a nastêpnie liczymy
         auto y = inverse_logistics(x);
         // y jest ju¿ liczb¹ z zakresu (-Inf, Inf). Do tej liczby dodajemy nasz y_offset
@@ -69,25 +72,25 @@ public:
         // i przekszta³camy z powrotem do przedzia³u (0,1) za pomoc¹ funkcji logistycznej:
         x = logistic(y);
         // i w kóncu do przedzia³u (0, pi):
-        fov_ = x * glm::pi<float>();
+        fov_ = x * pi<float>();
     }
 
-    glm::vec3 x() const { return x_; }
-    glm::vec3 y() const { return y_; }
-    glm::vec3 z() const { return z_; }
-    glm::vec3 position() const { return position_; }
-    glm::vec3 center() const { return center_; }
+    vec3 x() const { return x_; }
+    vec3 y() const { return y_; }
+    vec3 z() const { return z_; }
+    vec3 position() const { return position_; }
+    vec3 center() const { return center_; }
 
     // Obrót kamery wokó³ osi w punkcie centralnym polega na
     // 1. Obrocie po³ozenia kamery wokó³ tej osi i punktu.
     // 2. Obrotu wszystkich trzech wektorów definiuj¹cych orientacjê kamery wokó³ tej osi.
     // Pomocnicza funkcja tworz¹ca macierz obrotu o kat angle wokó³ osi axis:
-    inline glm::mat3 rotation(float angle, const glm::vec3& axis) {
-        auto u = glm::normalize(axis);
-        auto s = std::sin(angle);
-        auto c = std::cos(angle);
+    inline mat3 rotation(float angle, const vec3& axis) {
+        auto u = normalize(axis);
+        auto s = sin(angle);
+        auto c = cos(angle);
 
-        return glm::mat3(
+        return mat3(
             c + u.x * u.x * (1.0f - c),
             u.y * u.x * (1.0f - c) + u.z * s,
             u.z * u.x * (1.0f - c) - u.y * s,
@@ -102,7 +105,7 @@ public:
         );
     }
 
-    void rotate_around_point(float angle, const glm::vec3& axis, const glm::vec3& c) {
+    void rotate_around_point(float angle, const vec3& axis, const vec3& c) {
         auto R = rotation(angle, axis);
         x_ = R * x_;
         y_ = R * y_;
@@ -114,7 +117,7 @@ public:
 
     }
 
-    void rotate_around_center(float angle, const glm::vec3& axis) {
+    void rotate_around_center(float angle, const vec3& axis) {
         rotate_around_point(angle, axis, center_);
     }
 
@@ -125,10 +128,10 @@ private:
     float near_;
     float far_;
 
-    glm::vec3 position_; // po³o¿enie kamery
-    glm::vec3 center_; // punkt centralny
+    vec3 position_; // po³o¿enie kamery
+    vec3 center_; // punkt centralny
     // wektory definiuj¹ce orientacjê
-    glm::vec3 x_;
-    glm::vec3 y_;
-    glm::vec3 z_;
+    vec3 x_;
+    vec3 y_;
+    vec3 z_;
 };

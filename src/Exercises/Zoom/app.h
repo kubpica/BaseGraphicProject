@@ -17,7 +17,7 @@
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/gtc/matrix_transform.hpp>
-#include <Exercises\Zoom\camera.h>
+#include <Exercises/Zoom/camera.h>
 
 class SimpleShapeApplication : public xe::Application {
 public:

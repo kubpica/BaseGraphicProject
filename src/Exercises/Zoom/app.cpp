@@ -158,7 +158,7 @@ void SimpleShapeApplication::init() {
                                 , glm::vec3{ 0.0f, 0.0f, 0.0f }
                                 , glm::vec3{ 0.0, 0.0, 1.0 });
             // Macierz projekcji P
-            camera()->perspective(fov, aspect, near, far);
+            camera()->setPerspective(fov, aspect, near, far);
 
             // Przed rysowaniem musimy podpi¹æ bufor do zmiennej w szaderze
             glBindBufferBase(GL_UNIFORM_BUFFER, 1, u_pvm_buffer_);
