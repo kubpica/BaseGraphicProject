@@ -51,7 +51,7 @@ public:
 
     void set_controler(CameraControler* controler) { controler_ = controler; }
 
-    void SimpleShapeApplication::mouse_button_callback(int button, int action, int mods) {
+    void mouse_button_callback(int button, int action, int mods) {
         Application::mouse_button_callback(button, action, mods);
 
         if (controler_) {
@@ -67,7 +67,7 @@ public:
 
     }
 
-    void SimpleShapeApplication::cursor_position_callback(double x, double y) {
+    void cursor_position_callback(double x, double y) {
         Application::cursor_position_callback(x, y);
         if (controler_) {
             controler_->mouse_moved(x, y);
