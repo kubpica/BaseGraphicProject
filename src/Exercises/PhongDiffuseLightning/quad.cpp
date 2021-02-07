@@ -39,11 +39,11 @@ Quad::Quad()
     vector<GLfloat> vertices = {
         // Podstawa - kwadrat z dwóch trójk¹tów
         // Lewy trójk¹t
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // 0
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // 1
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // 2
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 0
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 1
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 2
         // Prawy trójk¹t
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // 3
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // 3
     };
 
     glGenBuffers(2, this->buffer_);
@@ -71,11 +71,15 @@ Quad::Quad()
     // Pod³¹czenie pozycji wierzcho³ków
     glEnableVertexAttribArray(0);
     // Define an array of generic vertex attribute data (index, size, type, normalized, stride, pointer)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(0));
 
     // Pod³¹czenie kolorów wierzcho³ków
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
+
+    // Pod³¹czenie normalnych
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(5 * sizeof(GLfloat)));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->buffer_[1]);
