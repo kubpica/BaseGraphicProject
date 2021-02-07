@@ -17,9 +17,9 @@
 #include <glm/vec3.hpp> // vec3
 #include <glm/vec4.hpp> // vec4
 #include <glm/gtc/matrix_transform.hpp>
-#include <Exercises/RuchKamery/camera.h>
-#include <Exercises/RuchKamery/camera_controler.h>
-#include <Exercises/TexturedPyramid/pyramid.h>
+#include <Exercises/PhongDiffuseLightning/camera.h>
+#include <Exercises/PhongDiffuseLightning/camera_controler.h>
+#include "quad.h"
 
 using namespace std;
 using namespace xe;
@@ -75,7 +75,7 @@ public:
         }
     }
 
-    std::shared_ptr<Pyramid> pyramid;
+    Quad* quad;
 
     // Zaczniemy od obracania kamer¹ wokó³ jej osi pionowej.
     float rotation_period;

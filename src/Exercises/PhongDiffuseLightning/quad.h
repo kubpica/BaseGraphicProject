@@ -3,17 +3,21 @@
 #include "glad/glad.h"
 
 
-class Pyramid {
+class Quad {
 public:
-    Pyramid();
-    ~Pyramid();
+    Quad();
+
+    ~Quad();
+
     void draw();
 
-    Pyramid(const Pyramid& rhs) = delete;
-    Pyramid& operator=(const Pyramid& rhs) = delete;
+    Quad(const Quad& rhs) = delete;
 
-    void operator=(Pyramid&& rhs) = delete;
-    Pyramid(Pyramid&& rhs) = delete;
+    Quad& operator=(const Quad& rhs) = delete;
+
+    void operator=(Quad&& rhs) = delete;
+
+    Quad(Quad&& rhs) = delete;
 private:
     GLuint vao_;
     GLuint buffer_[2];

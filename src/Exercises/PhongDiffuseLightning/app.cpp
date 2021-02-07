@@ -33,7 +33,7 @@ void SimpleShapeApplication::init() {
         cerr << string(PROJECT_DIR) + "/shaders/base_fs.glsl" << " shader files" << endl;
     }
 
-    this->pyramid = std::make_shared<Pyramid>();
+    quad = new Quad();
 
 #pragma region Zadanie 5 - PVM
             // Podpinamy blok Transformations z shadera wierzcho³ków pod punkt bindowania `1`
@@ -108,7 +108,7 @@ void SimpleShapeApplication::frame() {
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     
-    this->pyramid->draw();
+    this->quad->draw();
 }
 
 void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {
