@@ -197,16 +197,16 @@ void SimpleShapeApplication::init() {
 }
 
 void SimpleShapeApplication::frame() {
-    glBindVertexArray(vao_);
-    glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_SHORT, nullptr);
-    glBindVertexArray(0);
-
     // Poniewa¿ macierz projekcji P_ mo¿e zmieniaæ siê od klatki do klatki 
     // kod obliczaj¹cy i przesy³aj¹cy macierz PVM do szadera poprzez bufor uniform musi byæ w metodzie frame.
     auto PVM = camera()->projection() * camera()->view();
     glBindBuffer(GL_UNIFORM_BUFFER, u_pvm_buffer_);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    glBindVertexArray(vao_);
+    glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_SHORT, nullptr);
+    glBindVertexArray(0);
 }
 
 void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {
