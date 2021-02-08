@@ -52,7 +52,7 @@ void SimpleShapeApplication::init() {
 
             // Bindujemy go i alokujemy pamiêæ dla bufora
             glBindBuffer(GL_UNIFORM_BUFFER, u_pvm_buffer_);
-            glBufferData(GL_UNIFORM_BUFFER, sizeof(mat4), nullptr, GL_STATIC_DRAW);
+            glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(mat4), nullptr, GL_STATIC_DRAW);
             // W metodzie init pozostawiamy kod odpowiadaj¹cy za inicjalizacjê bufora u_pvm_buffer_
             // ale kod odpowiadaj¹cy za przesy³anie danych do bufora musimy przenieœæ do metody frame.
             glBindBuffer(GL_UNIFORM_BUFFER, 0); // Odbindowanie
@@ -103,10 +103,22 @@ void SimpleShapeApplication::init() {
 void SimpleShapeApplication::frame() {
     // Poniewa¿ macierz projekcji P_ mo¿e zmieniaæ siê od klatki do klatki 
     // kod obliczaj¹cy i przesy³aj¹cy macierz PVM do szadera poprzez bufor uniform musi byæ w metodzie frame.
-    auto PVM = camera()->projection() * camera()->view();
+    glm::mat4 P = camera()->projection();
+    glm::mat4 VM = camera()->view();
+
+    auto R = glm::mat3(VM);
+    auto N = glm::transpose(glm::inverse(R));
+
     glBindBuffer(GL_UNIFORM_BUFFER, u_pvm_buffer_);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(mat4), &PVM[0]);
+
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &P[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &VM[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &N[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(glm::vec4), sizeof(glm::vec3), &N[1]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + 2 * sizeof(glm::vec4), sizeof(glm::vec3), &N[2]);
+
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
     
     this->quad->draw();
 }
