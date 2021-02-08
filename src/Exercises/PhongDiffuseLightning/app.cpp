@@ -92,6 +92,7 @@ void SimpleShapeApplication::init() {
             auto V = camera()->view();
             light.position = V * glm::vec4(0.0f, 0.0f, 0.5f, 1.0f);
             light.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            light.a = glm::vec4(1.0f, 0.0f, 1.0f, 0.0f);
 
             glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &light.position[0]);
             glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4), &light.color[0]);
