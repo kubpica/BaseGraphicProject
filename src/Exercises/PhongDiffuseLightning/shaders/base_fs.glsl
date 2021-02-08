@@ -20,6 +20,10 @@ void main()
 {
     // Po interpolacji jego d³ugoœæ mog³a ulec zmianie, dlatego musimy go znormalizowaæ na nowo
     vec3 normal = normalize(vertex_normal_in_vs);
+    // czy widzimy œciankê przedni¹ czy tyln¹
+    if (!gl_FrontFacing) {
+        normal = -normal;
+    }
     
     // wektor "do œwiat³a" bez normalizacji
     vec3 light_vector = light.position_in_vs - vertex_position_in_vs;

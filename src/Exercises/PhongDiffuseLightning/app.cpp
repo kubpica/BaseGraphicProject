@@ -109,9 +109,9 @@ void SimpleShapeApplication::init() {
 
 #pragma region Backface culling
     // Wy³¹czenie rysowania œcianek tylnych
-    glEnable(GL_CULL_FACE);
+    /*glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
-    glCullFace(GL_BACK);
+    glCullFace(GL_BACK);*/
 #pragma endregion
 
     glEnable(GL_DEPTH_TEST); // W³¹cza algorytm bufora g³êbi
