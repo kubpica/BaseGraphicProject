@@ -7,6 +7,7 @@ layout(std140) uniform Light {
     vec3 position_in_vs;
     vec3 color;
     vec3 a; 
+    vec3 ambient;
 } light;
 
 in vec2 texture_uv;
@@ -43,5 +44,6 @@ void main()
     // przypisanie pikselowi koloru
     vec4 diffuse_color = texture(diffuse_map, texture_uv);
     vFragColor.a = diffuse_color.a;
-    vFragColor.rgb = light_in * diffuse_color.rgb*light.color;
+    vFragColor.rgb = diffuse_color.rgb*light.ambient.rgb;
+    vFragColor.rgb += light_in * diffuse_color.rgb * light.color;
 }

@@ -93,10 +93,12 @@ void SimpleShapeApplication::init() {
             light.position = V * glm::vec4(0.0f, 0.0f, 0.5f, 1.0f);
             light.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
             light.a = glm::vec4(1.0f, 0.0f, 1.0f, 0.0f);
+            light.ambient = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
 
             glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &light.position[0]);
             glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4), &light.color[0]);
             glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(glm::vec4), &light.a[0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::vec4), sizeof(glm::vec4), &light.ambient[0]);
 
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
