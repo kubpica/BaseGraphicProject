@@ -25,6 +25,12 @@ using namespace std;
 using namespace xe;
 using namespace glm;
 
+struct Light {
+    glm::vec4 position;
+    glm::vec4 color;
+    glm::vec4 a;
+};
+
 class SimpleShapeApplication : public Application {
 public:
     SimpleShapeApplication(int width, int height, string title, int major = 4, int minor = 1) :
@@ -87,7 +93,10 @@ private:
 
     // Zmienna zawieraj¹ca nazwê bufora uniform odpowiedzialnego za przesy³anie macierzy PVM do szadera
     GLuint u_pvm_buffer_;
+    GLuint u_light_buffer;
 
     Camera* camera_;
     CameraControler* controler_;
+
+    Light light;
 };

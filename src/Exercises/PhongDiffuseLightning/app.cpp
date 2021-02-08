@@ -76,6 +76,33 @@ void SimpleShapeApplication::init() {
             glBindBufferBase(GL_UNIFORM_BUFFER, 1, u_pvm_buffer_);
 #pragma endregion
 
+#pragma region Light - bufor uniform
+            auto u_light_index = glGetUniformBlockIndex(program, "Light");
+            if (u_light_index == -1) {
+                std::cerr << "Cannot find uniform Light" << std::endl;
+            }
+            else {
+                glUniformBlockBinding(program, u_light_index, 2);
+            }
+
+            glGenBuffers(1, &u_light_buffer);
+            glBindBuffer(GL_UNIFORM_BUFFER, u_light_buffer);
+            glBufferData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), nullptr, GL_STATIC_DRAW);
+
+            auto V = camera()->view();
+            light.position = V * glm::vec4(0.0f, 0.0f, 0.5f, 1.0f);
+            light.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &light.position[0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4), &light.color[0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(glm::vec4), &light.a[0]);
+
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+            glBindBufferBase(GL_UNIFORM_BUFFER, 2, u_light_buffer);
+#pragma endregion
+
+
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
     glViewport(0, 0, w, h);
 
@@ -119,8 +146,12 @@ void SimpleShapeApplication::frame() {
 
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+    light.position = VM * glm::vec4(0.0f, 0.0f, 0.5f, 1.0f);
+    glBindBuffer(GL_UNIFORM_BUFFER, u_light_buffer);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &light.position[0]);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
     
-    this->quad->draw();
+    quad->draw();
 }
 
 void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {
